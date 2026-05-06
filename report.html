@@ -336,23 +336,38 @@
             document.getElementById('v-dis-ar').innerText = gregorianToHijri(disD);
             document.getElementById('v-iss').innerText = fmtG(parseSmartDate(data.issueDate));
 
-            document.getElementById('v-dur-en').innerText = (data.duration || "").split('/')[1] || data.duration;
-            document.getElementById('v-dur-ar').innerText = (data.duration || "").split('/')[0];
+            const admG = fmtG(admD), disG = fmtG(disD);
+            const durRaw = data.duration || "--";
+            const durNum = durRaw.split('/')[0].trim();
+            const durEn = durRaw.split('/')[1] ? durRaw.split('/')[1].trim() : `${durNum} Days`;
+
+            document.getElementById('v-dur-en').innerText = `${durEn} (${admG} TO ${disG})`;
+            document.getElementById('v-dur-ar').innerText = `${durNum} (${gregorianToHijri(admD)} إلى ${gregorianToHijri(disD)})`;
 
             const fields = ['patientName', 'nationalId', 'nationality', 'employer', 'practitionerName', 'position', 'hospitalName'];
             const ids = ['v-name', 'v-nid', 'v-nat', 'v-emp', 'v-pra', 'v-pos', 'v-hosp'];
 
             fields.forEach((f, i) => {
-                let v = data[f] || "--";
-                let ar = String(v).split('/')[0], en = String(v).split('/')[1] || ar;
+                let v = data[f];
+                if (v === undefined || v === null || v === "") v = (f === 'hospitalName') ? "" : "--";
+                v = String(v);
+
+                let ar = v.split('/')[0].trim(), en = v.split('/')[1] ? v.split('/')[1].trim() : ar;
+                
                 if (f === 'hospitalName') {
-                    document.getElementById('v-hosp-ar').innerText = ar;
-                    document.getElementById('v-hosp-en').innerText = en;
+                    document.getElementById('v-hosp-ar').innerText = (ar !== "--" && ar !== "") ? ar : "";
+                    document.getElementById('v-hosp-en').innerText = (en !== "--" && en !== "") ? en : "";
                 } else if (document.getElementById(ids[i] + '-ar')) {
                     document.getElementById(ids[i] + '-ar').innerText = ar;
-                    document.getElementById(ids[i] + '-en').innerText = en;
+                    const enEl = document.getElementById(ids[i] + '-en');
+                    if (enEl) {
+                        enEl.innerText = en;
+                        if (f === 'patientName' || f === 'practitionerName') enEl.style.textTransform = 'uppercase';
+                        if (f === 'position') enEl.style.textTransform = 'lowercase';
+                    }
                 } else {
-                    document.getElementById(ids[i]).innerText = ar;
+                    const el = document.getElementById(ids[i]);
+                    if (el) el.innerText = ar;
                 }
             });
 
