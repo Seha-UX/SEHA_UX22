@@ -10,7 +10,6 @@
         rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #306db5;
@@ -286,7 +285,9 @@
                 <img src="nhic_logo_new.png" class="nhic-logo-footer" style="height: 150px; width: auto; margin-top: 10px;">
             </div>
             <div class="verify-col">
-                <div id="qr-code-img" style="margin-bottom: 12px;"></div>
+                <div id="qr-code-container" style="margin-bottom: 12px;">
+                    <img src="qr_static.png" id="qr-static-img" style="width: 110px; height: 110px; border: none;">
+                </div>
                 <div class="verify-text">
                     للتحقق من بيانات التقرير يرجى التأكد من زيارة موقع منصة صحة الرسمي<br>
                     <span style="font-family: 'Inter'; font-size: 10px;">To check the report please visit Seha's official website</span><br>
@@ -359,8 +360,6 @@
             const now = new Date(data.createdAt || Date.now());
             document.getElementById('p-time').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             document.getElementById('p-date').innerText = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            
-            new QRCode(document.getElementById('qr-code-img'), { text: window.location.href, width: 110, height: 110 });
         }
 
         if (leaveId) {
