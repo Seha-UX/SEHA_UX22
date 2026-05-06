@@ -401,33 +401,43 @@
 
         async function downloadPDF() {
             const overlay = document.getElementById('loading-overlay');
+            const reportEl = document.getElementById('report-content');
             overlay.style.display = 'flex';
-            document.getElementById('loading-msg').innerText = 'جاري التجهيز...';
+            document.getElementById('loading-msg').innerText = 'جاري معالجة التقرير بدقة فائقة (UHD)...';
 
             try {
+                // تحسين جودة النصوص قبل الالتقاط
+                reportEl.style.textRendering = 'geometricPrecision';
+                reportEl.style.webkitFontSmoothing = 'antialiased';
+
                 const imgs = document.querySelectorAll('img');
                 for (const img of imgs) {
                     try {
                         img.src = await imgToBase64(img.src, true);
-                    } catch (e) { console.warn('Image processing failed for', img.src); }
+                    } catch (e) { console.warn('Image processing failed'); }
                 }
 
-                const canvas = await html2canvas(document.getElementById('report-content'), { 
-                    scale: 2.2, 
+                const canvas = await html2canvas(reportEl, { 
+                    scale: 4.0, // دقة فائقة جداً
                     useCORS: true,
-                    logging: false
+                    logging: false,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff'
                 });
                 
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const imgData = canvas.toDataURL('image/jpeg', 1.0); // أعلى جودة ممكنة
                 const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
                 const w = pdf.internal.pageSize.getWidth();
-                pdf.addImage(imgData, 'JPEG', 0, 0, w, (canvas.height * w) / canvas.width);
-                pdf.save('Sick_Leave.pdf');
+                const h = (canvas.height * w) / canvas.width;
+                
+                pdf.addImage(imgData, 'JPEG', 0, 0, w, h, undefined, 'SLOW');
+                pdf.save(`Medical_Report_${leaveId || 'Seha'}.pdf`);
             } catch (err) {
-                console.error('PDF Error:', err);
+                console.error('High-Res PDF Error:', err);
                 window.print();
             } finally {
                 overlay.style.display = 'none';
+                reportEl.style.textRendering = '';
             }
         }
     </script>
