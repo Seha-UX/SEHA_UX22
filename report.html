@@ -37,7 +37,7 @@
             font-family: 'Cairo', 'Inter', sans-serif;
             background: #f0f2f5;
             margin: 0;
-            padding: 20px;
+            padding: 5px;
             direction: rtl;
         }
 
@@ -88,7 +88,10 @@
             text-transform: uppercase;
         }
 
-        .value-ar, .value-en, .value-center, .value-center-blue {
+        .value-ar,
+        .value-en,
+        .value-center,
+        .value-center-blue {
             color: var(--text-value);
             font-weight: 600;
         }
@@ -178,10 +181,20 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
         @media print {
-            .print-controls { display: none; }
+            .print-controls {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -199,9 +212,10 @@
     </div>
 
     <div class="report-paper" id="report-content">
-        <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; direction: ltr;">
+        <div class="header-container"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; direction: ltr;">
             <div class="header-left" style="width: 30%;">
-                <img src="logo_header.png" style="height: 100px; width: auto;">
+                <img src="logo_header.png" style="height: 115px; width: auto;">
             </div>
             <div class="header-center" style="width: 40%; text-align: center;">
                 <img src="report_header_text_new.png" style="width: 100%; height: auto;">
@@ -278,18 +292,20 @@
 
         <div class="footer-section">
             <div class="hospital-col">
-                <img src="moh_logo.png.png" class="moh-logo" style="height: 180px; width: auto;">
-                <div class="hospital-name" style="margin-top: 10px;">
+                <img src="moh_logo.png.png" class="moh-logo" style="height: 60px; width: auto;">
+                <div class="hospital-name" style="margin-top: 5px;">
                     <div id="v-hosp-ar" style="font-size: 15px; font-weight: bold;"></div>
                     <div id="v-hosp-en" style="font-size: 14px; font-family: 'Inter';"></div>
                 </div>
-                <img src="nhic_logo_new.png" class="nhic-logo-footer" style="height: 150px; width: auto; margin-top: 10px;">
+                <img src="nhic_logo_new.png" class="nhic-logo-footer"
+                    style="height: 150px; width: auto; margin-top: 10px;">
             </div>
             <div class="verify-col">
-                <div id="qr-code-img" style="margin-bottom: 12px;"></div>
+                <div id="qr-code-img" style="margin-bottom: 7px;"></div>
                 <div class="verify-text">
                     للتحقق من بيانات التقرير يرجى التأكد من زيارة موقع منصة صحة الرسمي<br>
-                    <span style="font-family: 'Inter'; font-size: 10px;">To check the report please visit Seha's official website</span><br>
+                    <span style="font-family: 'Inter'; font-size: 10px;">To check the report please visit Seha's
+                        official website</span><br>
                     <a href="https://seha-ux.github.io/seha-ux/" style="color: blue;">seha-ux.github.io/seha-ux/</a>
                 </div>
                 <div id="p-time" style="margin-top: 15px; font-weight: bold;">--</div>
@@ -329,7 +345,7 @@
             document.getElementById('v-id').innerText = data.leaveId;
             const admD = parseSmartDate(data.admissionDate), disD = parseSmartDate(data.dischargeDate);
             const fmtG = (d) => d ? `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}` : "--";
-            
+
             document.getElementById('v-adm-en').innerText = fmtG(admD);
             document.getElementById('v-adm-ar').innerText = gregorianToHijri(admD);
             document.getElementById('v-dis-en').innerText = fmtG(disD);
@@ -353,7 +369,7 @@
                 v = String(v);
 
                 let ar = v.split('/')[0].trim(), en = v.split('/')[1] ? v.split('/')[1].trim() : ar;
-                
+
                 if (f === 'hospitalName') {
                     document.getElementById('v-hosp-ar').innerText = (ar !== "--" && ar !== "") ? ar : "";
                     document.getElementById('v-hosp-en').innerText = (en !== "--" && en !== "") ? en : "";
@@ -374,12 +390,12 @@
             const now = new Date(data.createdAt || Date.now());
             document.getElementById('p-time').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             document.getElementById('p-date').innerText = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            
+
             // توليد الباركود الموحد للرابط الثابت
-            new QRCode(document.getElementById('qr-code-img'), { 
-                text: "https://seha-ux.github.io/seha-ux/", 
-                width: 110, 
-                height: 110,
+            new QRCode(document.getElementById('qr-code-img'), {
+                text: "https://seha-ux.github.io/seha-ux/",
+                width: 70,
+                height: 70,
                 correctLevel: QRCode.CorrectLevel.H
             });
         }
@@ -408,7 +424,7 @@
                         if (clean) {
                             try {
                                 const id = ctx.getImageData(0, 0, c.width, c.height), d = id.data;
-                                for (let i = 0; i < d.length; i += 4) if (d[i]>235 && d[i+1]>235 && d[i+2]>235) d[i+3]=0;
+                                for (let i = 0; i < d.length; i += 4) if (d[i] > 235 && d[i + 1] > 235 && d[i + 2] > 235) d[i + 3] = 0;
                                 ctx.putImageData(id, 0, 0);
                             } catch (e) { console.warn('Pixel cleaning blocked by security, skipping cleaning for this image.'); }
                         }
@@ -438,19 +454,19 @@
                     } catch (e) { console.warn('Image processing failed'); }
                 }
 
-                const canvas = await html2canvas(reportEl, { 
+                const canvas = await html2canvas(reportEl, {
                     scale: 4.0, // دقة فائقة جداً
                     useCORS: true,
                     logging: false,
                     allowTaint: true,
                     backgroundColor: '#ffffff'
                 });
-                
+
                 const imgData = canvas.toDataURL('image/jpeg', 1.0); // أعلى جودة ممكنة
                 const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
                 const w = pdf.internal.pageSize.getWidth();
                 const h = (canvas.height * w) / canvas.width;
-                
+
                 pdf.addImage(imgData, 'JPEG', 0, 0, w, h, undefined, 'SLOW');
                 pdf.save(`Medical_Report_${leaveId || 'Seha'}.pdf`);
             } catch (err) {
@@ -463,4 +479,5 @@
         }
     </script>
 </body>
+
 </html>
